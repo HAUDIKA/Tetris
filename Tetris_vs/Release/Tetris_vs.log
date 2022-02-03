@@ -1,8 +1,8 @@
-﻿  main.cpp
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\main.cpp(22,20): warning C4353: Nicht dem Standard entsprechende Erweiterung: Konstante 0 als Funktionsausdruck. Verwenden Sie stattdessen die systeminterne __noop-Funktion.
+﻿  Game.cpp
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(20,15): warning C4353: Nicht dem Standard entsprechende Erweiterung: Konstante 0 als Funktionsausdruck. Verwenden Sie stattdessen die systeminterne __noop-Funktion.
   Code wird generiert.
-  1 of 14 functions ( 7.1%) were compiled, the rest were copied from previous compilation.
+  3 of 37 functions ( 8.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
-  Tetris_vs.vcxproj -> C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Release\Tetris_vs.exe
+  Tetris_vs.vcxproj -> C:\Users\mika\Source\Repos\HAUDIKA\Tetris\Tetris_vs\Release\Tetris_vs.exe
