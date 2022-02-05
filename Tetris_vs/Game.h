@@ -3,6 +3,7 @@
 #include <memory>
 #include <iostream>
 #include <random>
+#include <time.h>
 #include "Tile.h"
 
 using namespace sf;
@@ -54,9 +55,13 @@ private:
 	VideoMode videomode;
 	Event event;
 
+	std::time_t begin, end;
+
 	//Game logic
 	
 	std::unique_ptr<Tile> current_tile;
 	std::vector<std::vector<bool>> matrix;
+	double time_intervall = 0.9;
+	double measured_time = 0;
 };
 
