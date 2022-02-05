@@ -28,6 +28,17 @@ void Game::update()
 
 
 		case Event::KeyPressed:
+			
+			if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Z)
+			{
+				current_tile->rotate(0);
+			}
+
+			if (event.key.code == sf::Keyboard::X)
+			{
+				current_tile->rotate(1);
+			}
+
 			if (event.key.code == sf::Keyboard::Left)
 			{
 				current_tile->move_left();
@@ -202,14 +213,6 @@ void Game::place_tile()
 				matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)] = true;
 			}
 		}
-	}
-	for (auto row : this->matrix)
-	{
-		for (auto col : row)
-		{
-			std::cout << col;
-		}
-		std::cout << std::endl;
 	}
 
 	this->pop_line();
