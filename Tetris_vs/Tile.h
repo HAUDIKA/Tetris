@@ -12,7 +12,6 @@ public:
     Tile(int randomNumber);
     ~Tile() = default;
 
-    void colliosion(int posX, int posY);
  
     
     std::vector<std::vector<bool>> getTileshape();
@@ -26,9 +25,9 @@ public:
     void move_left();
     void move_up();
 
-    
+    void set_furthest();
 
-    void rotate();
+    void rotate(int direction);
 
 private:
 
