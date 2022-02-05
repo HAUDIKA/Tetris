@@ -4,6 +4,7 @@
 Game::Game()
 {
 	this->initVariables();
+	std::time(&this->begin);
 }
 
 //Destructor
@@ -18,6 +19,8 @@ Game::~Game()
 //Update the Simulation each simulationstep
 void Game::update()
 {
+
+	//read user input
 	while (window->pollEvent(event))
 	{
 		switch (event.type)
@@ -31,12 +34,14 @@ void Game::update()
 			
 			if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Z)
 			{
-				current_tile->rotate(0);
+				this->current_tile->rotate(0);
+				if (this->collision()) this->current_tile->rotate(1);
 			}
 
 			if (event.key.code == sf::Keyboard::X)
 			{
-				current_tile->rotate(1);
+				this->current_tile->rotate(1);
+				if (this->collision()) this->current_tile->rotate(0);
 			}
 
 			if (event.key.code == sf::Keyboard::Left)
@@ -61,6 +66,24 @@ void Game::update()
 		default: break;
 		}
 	}
+
+	//Move down piece after time intervall
+	std::time(&this->end);
+
+	this->measured_time = this->end - this->begin;
+
+	if (this->measured_time - this->time_intervall > 0)
+	{
+		current_tile->move_down();
+		if (this->collision())
+		{
+			current_tile->move_up();
+			this->place_tile();
+		}
+		measured_time = 0; 
+		std::time(&this->begin);
+	}
+
 }
 
 
@@ -158,6 +181,7 @@ void Game::pop_line()
 		{
 			this->matrix.erase(matrix.begin() + row);
 			this->matrix.insert(matrix.begin(), { 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 });
+			this->time_intervall *= 0.95;
 		}
 		++row;
 	}
@@ -218,6 +242,8 @@ void Game::place_tile()
 	this->pop_line();
 
 	this->create_new_tile();
+
+	std::time(&this->begin);
 }
 
 
