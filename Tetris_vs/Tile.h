@@ -14,7 +14,7 @@ public:
 
  
     
-    std::vector<std::vector<bool>> getTileshape();
+    std::vector<std::vector<int>> getTileshape();
     sf::Vector2f getPosition();
     
 
@@ -31,7 +31,7 @@ public:
 
 private:
 
-    std::vector<std::vector<bool>> tileshape;
+    std::vector<std::vector<int>> tileshape;
     sf::Vector2f current_position;
     struct Furthest_indexes {
         int furthest_right;

@@ -4,7 +4,7 @@
 Game::Game()
 {
 	this->initVariables();
-	std::time(&this->begin);
+	this->start = std::clock();
 }
 
 //Destructor
@@ -14,12 +14,11 @@ Game::~Game()
 }
 
 //-------Updating--------------------------------------------------------------------------------------------------------------------
- 
+
 
 //Update the Simulation each simulationstep
 void Game::update()
 {
-
 	//read user input
 	while (window->pollEvent(event))
 	{
@@ -28,62 +27,72 @@ void Game::update()
 		case Event::Closed():
 			window->close();
 			break;
-
-
-		case Event::KeyPressed:
-			
-			if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Z)
-			{
-				this->current_tile->rotate(0);
-				if (this->collision()) this->current_tile->rotate(1);
-			}
-
-			if (event.key.code == sf::Keyboard::X)
-			{
-				this->current_tile->rotate(1);
-				if (this->collision()) this->current_tile->rotate(0);
-			}
-
-			if (event.key.code == sf::Keyboard::Left)
-			{
-				current_tile->move_left();
-				if (this->collision()) current_tile->move_right();
-			}
-			else if (event.key.code == sf::Keyboard::Right)
-			{
-				current_tile->move_right();
-				if (this->collision()) current_tile->move_left();
-			}
-			else if (event.key.code == sf::Keyboard::Down)
-			{
-				current_tile->move_down();
-				if (this->collision())
-				{
-					current_tile->move_up();
-					this->place_tile();
-				}
-			}
-		default: break;
 		}
-	}
 
-	//Move down piece after time intervall
-	std::time(&this->end);
-
-	this->measured_time = this->end - this->begin;
-
-	if (this->measured_time - this->time_intervall > 0)
-	{
-		current_tile->move_down();
-		if (this->collision())
+		if (!this->gameOver)
 		{
-			current_tile->move_up();
-			this->place_tile();
+			switch (event.type)
+			{
+			case Event::KeyPressed:
+
+				if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Y)
+				{
+					this->current_tile->rotate(0);
+					if (this->collision()) this->current_tile->rotate(1);
+				}
+
+				if (event.key.code == sf::Keyboard::X)
+				{
+					this->current_tile->rotate(1);
+					if (this->collision()) this->current_tile->rotate(0);
+				}
+
+				if (event.key.code == sf::Keyboard::Left)
+				{
+					current_tile->move_left();
+					if (this->collision()) current_tile->move_right();
+				}
+				else if (event.key.code == sf::Keyboard::Right)
+				{
+					current_tile->move_right();
+					if (this->collision()) current_tile->move_left();
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					current_tile->move_down();
+					if (this->collision())
+					{
+						current_tile->move_up();
+						this->place_tile();
+					}
+				}
+			default: break;
+			}
+
+
+
+
 		}
-		measured_time = 0; 
-		std::time(&this->begin);
 	}
 
+	this->measured_time = (double)(std::clock() - this->start) / (double)CLOCKS_PER_SEC;
+
+	if (!this->gameOver)
+	{
+		//Move down piece after time intervall
+
+		if (this->measured_time - this->time_intervall > 0)
+		{
+			current_tile->move_down();
+			if (this->collision())
+			{
+				current_tile->move_up();
+				this->place_tile();
+			}
+			this->measured_time = 0;
+			this->start = std::clock();
+		}
+	}
 }
 
 
@@ -108,17 +117,40 @@ void Game::render()
 
 void Game::drawTile()
 {
-	std::vector<std::vector<bool>> temp_tile = current_tile->getTileshape();
+	std::vector<std::vector<int>> temp_tile = current_tile->getTileshape();
 	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
-	cell.setFillColor(sf::Color::Blue);
-#
 
 	for (int row = 0; row < 4; row++)
 	{
 		for (int col = 0; col < 4; col++)
 		{
-			if (temp_tile[row][col])
+			if (temp_tile[row][col] != 0)
 			{
+				switch (temp_tile[row][col])
+				{
+				case (1):
+					cell.setFillColor(sf::Color::Blue);
+					break;
+				case 2:
+					cell.setFillColor(sf::Color::Yellow);
+					break;
+				case 3:
+					cell.setFillColor(sf::Color::Magenta);
+					break;
+				case 4:
+					cell.setFillColor(sf::Color::Red);
+					break;
+				case 5:
+					cell.setFillColor(sf::Color::Green);
+					break;
+				case 6:
+					cell.setFillColor(sf::Color::Blue);
+					break;
+				case 7:
+					cell.setFillColor(sf::Color::Green);
+					break;
+				}
+
 				cell.setPosition(sf::Vector2f(col * CELL_SIZE, row * CELL_SIZE) + current_tile->getPosition());
 				this->window->draw(cell);
 			}
@@ -132,26 +164,43 @@ void Game::drawTile()
 void Game::drawMatrix()
 {
 
-	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE-1, CELL_SIZE-1));
+	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
 	cell.setFillColor(sf::Color::Red);
-
-	sf::RectangleShape empty_cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
-	empty_cell.setFillColor(sf::Color::Green);
 
 	for (int row = 0; row < FIELD_HEIGHT; row++)
 	{
 		for (int col = 0; col < FIELD_WIDTH; col++)
 		{
-			if (matrix[row][col])
+			switch (this->matrix[row][col])
 			{
-				cell.setPosition(sf::Vector2f(CELL_SIZE * col, CELL_SIZE * row));
-				this->window->draw(cell);
+			case (1):
+				cell.setFillColor(sf::Color::Blue);
+				break;
+			case 2:
+				cell.setFillColor(sf::Color::Yellow);
+				break;
+			case 3:
+				cell.setFillColor(sf::Color::Magenta);
+				break;
+			case 4:
+				cell.setFillColor(sf::Color::Red);
+				break;
+			case 5:
+				cell.setFillColor(sf::Color::Green);
+				break;
+			case 6:
+				cell.setFillColor(sf::Color::Blue);
+				break;
+			case 7:
+				cell.setFillColor(sf::Color::Green);
+				break;
+			default:
+				cell.setFillColor(sf::Color::Cyan);
+				break;
 			}
-			else
-			{
-				empty_cell.setPosition(sf::Vector2f(CELL_SIZE * col, CELL_SIZE * row));
-				this->window->draw(empty_cell);
-			}
+
+			cell.setPosition(sf::Vector2f(CELL_SIZE * col, CELL_SIZE * row));
+			this->window->draw(cell);
 		}
 	}
 }
@@ -160,16 +209,14 @@ void Game::pop_line()
 {
 	bool complete;
 
-	//std::vector<std::vector<bool>>::iterator row = matrix.begin();
 
-	
 
 	int row = 0;
 	while (row < FIELD_HEIGHT)
 	{
-		complete = true; 
+		complete = true;
 
-		for (auto col =	this->matrix[row].begin(); col!=this->matrix[row].end(); col++)
+		for (auto col = this->matrix[row].begin(); col != this->matrix[row].end(); col++)
 		{
 			if (!*col)
 			{
@@ -196,13 +243,15 @@ void Game::create_new_tile()
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 6);
 	current_tile = std::make_unique<Tile>(dist6(rng));
+
 	current_tile->setPosition(sf::Vector2f(FIELD_WIDTH / 2 * CELL_SIZE - CELL_SIZE, 0.f));
+
 }
 
 bool Game::collision()
 {
 
-	std::vector<std::vector<bool>> temp_tile = current_tile->getTileshape();
+	std::vector<std::vector<int>> temp_tile = current_tile->getTileshape();
 	sf::Vector2f temp_position = current_tile->getPosition();
 
 	auto temp_furthest = current_tile->getFurthests();
@@ -213,7 +262,7 @@ bool Game::collision()
 	{
 		for (int col = 0; col < 4; col++)
 		{
-			if (temp_tile[row][col] && matrix[row + (int)(temp_position.y/CELL_SIZE)][col + (int)(temp_position.x/CELL_SIZE)])
+			if (temp_tile[row][col] != 0 && matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)] != 0)
 			{
 				return true;
 			}
@@ -225,16 +274,16 @@ bool Game::collision()
 
 void Game::place_tile()
 {
-	std::vector<std::vector<bool>> temp_tile = current_tile->getTileshape();
+	std::vector<std::vector<int>> temp_tile = current_tile->getTileshape();
 	sf::Vector2f temp_position = current_tile->getPosition();
 
 	for (int row = 0; row < 4; row++)
 	{
 		for (int col = 0; col < 4; col++)
 		{
-			if (temp_tile[row][col] && !matrix[row + (int)(temp_position.y/CELL_SIZE)][col + (int)(temp_position.x/CELL_SIZE)])
+			if (temp_tile[row][col] && !matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)])
 			{
-				matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)] = true;
+				matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)] = temp_tile[row][col];
 			}
 		}
 	}
@@ -243,7 +292,10 @@ void Game::place_tile()
 
 	this->create_new_tile();
 
-	std::time(&this->begin);
+	if (this->collision())
+	{
+		this->gameOver = true;
+	}
 }
 
 
@@ -255,7 +307,7 @@ void Game::place_tile()
 //checks if window is still open
 bool Game::isOpen()
 {
-	return this->window->isOpen() ?  true : false;
+	return this->window->isOpen() ? true : false;
 }
 
 
@@ -263,18 +315,23 @@ bool Game::isOpen()
 
 void Game::initField()
 {
-	std::vector<bool> temp_row;
+	std::vector<int> temp_row;
 
-	for (int row_count =  0; row_count < FIELD_HEIGHT; row_count++)
+	for (int row_count = 0; row_count < FIELD_HEIGHT; row_count++)
 	{
 		for (int col_count = 0; col_count < FIELD_WIDTH; col_count++)
 		{
-			temp_row.push_back(0); 
+			temp_row.push_back(0);
 		}
 		matrix.push_back(temp_row);
 		temp_row.erase(temp_row.begin(), temp_row.end());
 	}
 
+}
+
+bool Game::isGameOver()
+{
+	return this->gameOver;
 }
 
 //Initialization of Member variables

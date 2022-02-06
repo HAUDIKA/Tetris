@@ -1,36 +1,23 @@
 ﻿  Game.cpp
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(28,15): warning C4353: Nicht dem Standard entsprechende Erweiterung: Konstante 0 als Funktionsausdruck. Verwenden Sie stattdessen die systeminterne __noop-Funktion.
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(73,34): warning C4244: "=": Konvertierung von "time_t" in "double", möglicher Datenverlust
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(122,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(27,15): warning C4353: Nicht dem Standard entsprechende Erweiterung: Konstante 0 als Funktionsausdruck. Verwenden Sie stattdessen die systeminterne __noop-Funktion.
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(154,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(122,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(154,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(147,62): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(202,61): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(147,45): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(202,44): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(152,68): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
-          with
-          [
-              T=float
-          ]
-C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Game.cpp(152,51): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
-          with
-          [
-              T=float
-          ]
-  main.cpp
-  Code wird generiert...
   Tetris_vs.vcxproj -> C:\Users\mika\source\repos\HAUDIKA\Tetris\Tetris_vs\Debug\Tetris_vs.exe
