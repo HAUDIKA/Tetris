@@ -5,17 +5,19 @@
 
 int main()
 {
-	
+
 	Game game;
 
 	game.create_new_tile();
 
 	while (game.isOpen())
 	{
+
 		game.update();
 
 		game.render();
 	}
 
+
 	return 0;
-} 
+}

@@ -3,7 +3,7 @@
 #include <memory>
 #include <iostream>
 #include <random>
-#include <time.h>
+#include <ctime>
 #include "Tile.h"
 
 using namespace sf;
@@ -28,7 +28,6 @@ public:
 
 	//Simulation
 	void update();
-	void update_collision();
 
 
 	void render();
@@ -45,6 +44,7 @@ public:
 	bool isOpen();
 	void initVariables();
 	void initField();
+	bool isGameOver();
 
 	;
 
@@ -55,13 +55,14 @@ private:
 	VideoMode videomode;
 	Event event;
 
-	std::time_t begin, end;
+	std::clock_t start;
 
 	//Game logic
 	
 	std::unique_ptr<Tile> current_tile;
-	std::vector<std::vector<bool>> matrix;
+	std::vector<std::vector<int>> matrix;
 	double time_intervall = 0.9;
 	double measured_time = 0;
+	bool gameOver = false;
 };
 

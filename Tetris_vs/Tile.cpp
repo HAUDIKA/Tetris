@@ -19,10 +19,10 @@ Tile::Tile(int initRandomNumber)
 		break;
 
 	case 1:
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 0 ,1 ,0 });
+		tileshape.push_back({ 0, 0 ,2 ,0 });
+		tileshape.push_back({ 0, 0 ,2 ,0 });
+		tileshape.push_back({ 0, 0 ,2 ,0 });
+		tileshape.push_back({ 0, 0 ,2 ,0 });
 
 		Furthests.furthest_down = 4;
 		Furthests.furthest_left = 2;
@@ -32,9 +32,9 @@ Tile::Tile(int initRandomNumber)
 		break;
 
 	case 2:
-		tileshape.push_back({ 0, 1 ,0 ,0 });
-		tileshape.push_back({ 0, 1 ,0 ,0 });
-		tileshape.push_back({ 0, 1 ,1 ,0 });
+		tileshape.push_back({ 0, 3 ,0 ,0 });
+		tileshape.push_back({ 0, 3 ,0 ,0 });
+		tileshape.push_back({ 0, 3 ,3 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
 		Furthests.furthest_down = 3;
@@ -45,9 +45,9 @@ Tile::Tile(int initRandomNumber)
 		break;
 
 	case 3:
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 1 ,1 ,0 });
+		tileshape.push_back({ 0, 0 ,4 ,0 });
+		tileshape.push_back({ 0, 0 ,4 ,0 });
+		tileshape.push_back({ 0, 4 ,4 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
 		Furthests.furthest_down = 3;
@@ -57,9 +57,9 @@ Tile::Tile(int initRandomNumber)
 		break;
 
 	case 4:
-		tileshape.push_back({ 0, 1 ,0 ,0 });
-		tileshape.push_back({ 0, 1 ,1 ,0 });
-		tileshape.push_back({ 0, 0 ,1 ,0 });
+		tileshape.push_back({ 0, 5 ,0 ,0 });
+		tileshape.push_back({ 0, 5 ,5 ,0 });
+		tileshape.push_back({ 0, 0 ,5 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
 		Furthests.furthest_down = 3;
@@ -70,9 +70,9 @@ Tile::Tile(int initRandomNumber)
 		break; 
 
 	case 5:
-		tileshape.push_back({ 0, 0 ,1 ,0 });
-		tileshape.push_back({ 0, 1 ,1 ,0 });
-		tileshape.push_back({ 0, 1 ,0 ,0 });
+		tileshape.push_back({ 0, 0 ,6 ,0 });
+		tileshape.push_back({ 0, 6 ,6 ,0 });
+		tileshape.push_back({ 0, 6 ,0 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
 		Furthests.furthest_down = 3;
@@ -84,8 +84,8 @@ Tile::Tile(int initRandomNumber)
 
 	case 6:
 		tileshape.push_back({ 0, 0 ,0 ,0 });
-		tileshape.push_back({ 1, 1 ,1 ,0 });
-		tileshape.push_back({ 0, 1 ,0 ,0 });
+		tileshape.push_back({ 7, 7 ,7 ,0 });
+		tileshape.push_back({ 0, 7 ,0 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
 		Furthests.furthest_down = 3;
@@ -102,7 +102,7 @@ Tile::Tile(int initRandomNumber)
 }
 
 
-std::vector<std::vector<bool>> Tile::getTileshape()
+std::vector<std::vector<int>> Tile::getTileshape()
 {
 	return tileshape;
 }
@@ -139,16 +139,6 @@ void Tile::move_up()
 
 void Tile::set_furthest()
 {
-
-	for (auto row : this->tileshape)
-	{
-		for (bool col : row)
-		{
-			std::cout << col;
-		}
-		std::cout << std::endl;
-	}
-
 	bool break_flag = false;
 
 	//get furthest_right
@@ -220,18 +210,13 @@ void Tile::set_furthest()
 		}
 	}
 	break_flag = false;
-
-	std::cout << this->Furthests.furthest_left<< std::endl;
-	std::cout << this->Furthests.furthest_right << std::endl;
-	std::cout << this->Furthests.furthest_down << std::endl;
-	std::cout << this->Furthests.furthest_up << std::endl;
 }
 
 
 void Tile::rotate(int direction)
 { 
 
-	std::vector<std::vector<bool>> temp_tileshape = { { 0, 0 ,0 ,0 }, { 0, 0 ,0 ,0 },{ 0, 0 ,0 ,0 }, { 0, 0 ,0 ,0 } };
+	std::vector<std::vector<int>> temp_tileshape = { { 0, 0 ,0 ,0 }, { 0, 0 ,0 ,0 },{ 0, 0 ,0 ,0 }, { 0, 0 ,0 ,0 } };
 	
 		switch (direction)	
 		{
