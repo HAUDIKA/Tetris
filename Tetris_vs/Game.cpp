@@ -19,6 +19,23 @@ Game::~Game()
 //Update the Simulation each simulationstep
 void Game::update()
 {
+	if (!this->gameOver)
+	{
+		//Move down piece after time intervall
+		this->measured_time = (double)(std::clock() - this->start) / (double)CLOCKS_PER_SEC;
+		if (this->measured_time - this->time_intervall > 0)
+		{
+			current_tile->move_down();
+			if (this->collision(current_tile.get()))
+			{
+				current_tile->move_up();
+				this->place_tile();
+			}
+			this->measured_time = 0;
+			this->start = std::clock();
+		}
+	}
+
 	//read user input
 	while (window->pollEvent(event))
 	{
@@ -38,59 +55,42 @@ void Game::update()
 				if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Y)
 				{
 					this->current_tile->rotate(0);
-					if (this->collision()) this->current_tile->rotate(1);
+					
+					if (this->collision(current_tile.get())) this->current_tile->rotate(1);
+
+					this->set_ghost_tile();
 				}
 
-				if (event.key.code == sf::Keyboard::X)
+				else if (event.key.code == sf::Keyboard::X)
 				{
 					this->current_tile->rotate(1);
-					if (this->collision()) this->current_tile->rotate(0);
+					if (this->collision(current_tile.get())) this->current_tile->rotate(0);
+					this->set_ghost_tile();
 				}
 
-				if (event.key.code == sf::Keyboard::Left)
+
+
+				else if (event.key.code == sf::Keyboard::Left)
 				{
 					current_tile->move_left();
-					if (this->collision()) current_tile->move_right();
+					if (this->collision(current_tile.get())) current_tile->move_right();
+					this->set_ghost_tile();
 				}
 				else if (event.key.code == sf::Keyboard::Right)
 				{
 					current_tile->move_right();
-					if (this->collision()) current_tile->move_left();
+					if (this->collision(current_tile.get())) current_tile->move_left();
+					this->set_ghost_tile();
 				}
+
+			
 				else if (event.key.code == sf::Keyboard::Down)
 				{
-					current_tile->move_down();
-					if (this->collision())
-					{
-						current_tile->move_up();
-						this->place_tile();
-					}
+					this->current_tile->setPosition(this->ghost_tile->getPosition());
+					this->place_tile();
 				}
 			default: break;
 			}
-
-
-
-
-		}
-	}
-
-	this->measured_time = (double)(std::clock() - this->start) / (double)CLOCKS_PER_SEC;
-
-	if (!this->gameOver)
-	{
-		//Move down piece after time intervall
-
-		if (this->measured_time - this->time_intervall > 0)
-		{
-			current_tile->move_down();
-			if (this->collision())
-			{
-				current_tile->move_up();
-				this->place_tile();
-			}
-			this->measured_time = 0;
-			this->start = std::clock();
 		}
 	}
 }
@@ -109,15 +109,16 @@ void Game::render()
 
 	this->drawMatrix();
 
-	this->drawTile();
+	this->draw_ghost_tile();
+	this->drawTile(this->current_tile.get());
 
 	this->window->display();
 }
 
 
-void Game::drawTile()
+void Game::drawTile(Tile* tile)
 {
-	std::vector<std::vector<int>> temp_tile = current_tile->getTileshape();
+	std::vector<std::vector<int>> temp_tile = tile->getTileshape();
 	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
 
 	for (int row = 0; row < 4; row++)
@@ -151,7 +152,27 @@ void Game::drawTile()
 					break;
 				}
 
-				cell.setPosition(sf::Vector2f(col * CELL_SIZE, row * CELL_SIZE) + current_tile->getPosition());
+				cell.setPosition(sf::Vector2f(col * CELL_SIZE, row * CELL_SIZE) + tile->getPosition());
+				this->window->draw(cell);
+			}
+		}
+	}
+}
+
+void Game::draw_ghost_tile()
+{
+	std::vector<std::vector<int>> temp_tile = this->ghost_tile->getTileshape();
+	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
+
+	cell.setOutlineColor(sf::Color::Transparent);
+
+	for (int row = 0; row < 4; row++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			if (temp_tile[row][col] != 0)
+			{
+				cell.setPosition(sf::Vector2f(col * CELL_SIZE, row * CELL_SIZE) + this->ghost_tile->getPosition());
 				this->window->draw(cell);
 			}
 		}
@@ -163,7 +184,6 @@ void Game::drawTile()
 
 void Game::drawMatrix()
 {
-
 	sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 1, CELL_SIZE - 1));
 	cell.setFillColor(sf::Color::Red);
 
@@ -234,6 +254,21 @@ void Game::pop_line()
 	}
 }
 
+void Game::set_ghost_tile()
+{
+	this->ghost_tile = std::make_unique<Tile>(0);
+	this->ghost_tile->setTileshape(this->current_tile->getTileshape());
+	this->ghost_tile->setPosition(this->current_tile->getPosition());
+	this->ghost_tile->set_furthest();
+
+
+	while (!this->collision(this->ghost_tile.get()))
+	{
+		this->ghost_tile->move_down();
+	}
+	this->ghost_tile->move_up();
+}
+
 
 //-------Game Logic---------------------------------------------------------------------------------------------------------------------------
 
@@ -242,19 +277,19 @@ void Game::create_new_tile()
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 6);
-	current_tile = std::make_unique<Tile>(dist6(rng));
+	this->current_tile = std::make_unique<Tile>(dist6(rng));
 
 	current_tile->setPosition(sf::Vector2f(FIELD_WIDTH / 2 * CELL_SIZE - CELL_SIZE, 0.f));
 
+	this->set_ghost_tile();
 }
 
-bool Game::collision()
+bool Game::collision(Tile* tile)
 {
+	std::vector<std::vector<int>> temp_tile = tile->getTileshape();
+	sf::Vector2f temp_position = tile->getPosition();
 
-	std::vector<std::vector<int>> temp_tile = current_tile->getTileshape();
-	sf::Vector2f temp_position = current_tile->getPosition();
-
-	auto temp_furthest = current_tile->getFurthests();
+	auto temp_furthest = tile->getFurthests();
 
 	if (temp_position.x + CELL_SIZE * temp_furthest.furthest_right > FIELD_WIDTH * CELL_SIZE || temp_position.y + temp_furthest.furthest_down * CELL_SIZE > FIELD_HEIGHT * CELL_SIZE || temp_position.x + temp_furthest.furthest_left * CELL_SIZE < 0) return true;
 
@@ -268,7 +303,6 @@ bool Game::collision()
 			}
 		}
 	}
-
 	return false;
 }
 
@@ -292,7 +326,7 @@ void Game::place_tile()
 
 	this->create_new_tile();
 
-	if (this->collision())
+	if (this->collision(current_tile.get()))
 	{
 		this->gameOver = true;
 	}
@@ -338,6 +372,7 @@ bool Game::isGameOver()
 void Game::initVariables()
 {
 	this->initField();
+	this->create_new_tile();
 	this->videomode.height = 900;
 	this->videomode.width = 600;
 	this->window = std::make_unique<RenderWindow>(videomode, "Tetris", Style::Titlebar | Style::Close);

@@ -112,6 +112,11 @@ sf::Vector2f Tile::getPosition()
 	return current_position;
 }
 
+void Tile::setTileshape(std::vector<std::vector<int>> new_tileshape)
+{
+	this->tileshape = new_tileshape;
+}
+
 void Tile::setPosition(sf::Vector2f new_position)
 {
 	current_position = new_position;
@@ -146,7 +151,7 @@ void Tile::set_furthest()
 	{
 		if (break_flag) break;
 
-		for (int row = 0; row < 4; row++)
+		for (int row = 0; row < 4; row++ != 0)
 		{
 			if (this->tileshape[row][col])
 			{
@@ -165,7 +170,7 @@ void Tile::set_furthest()
 
 		for (int row = 0; row < 4; row++)
 		{
-			if (this->tileshape[row][col])
+			if (this->tileshape[row][col] != 0)
 			{
 				this->Furthests.furthest_left = col;
 				break_flag = true;
@@ -183,7 +188,7 @@ void Tile::set_furthest()
 
 		for (int col = 3; col >= 0; col--)
 		{
-			if (this->tileshape[row][col])
+			if (this->tileshape[row][col] != 0)
 			{
 				this->Furthests.furthest_down = row+1;
 				break_flag = true;
@@ -201,7 +206,7 @@ void Tile::set_furthest()
 
 		for (int col = 3; col >= 0; col--)
 		{
-			if (this->tileshape[row][col])
+			if (this->tileshape[row][col] != 0)
 			{
 				this->Furthests.furthest_up = row;
 				break_flag = true; 

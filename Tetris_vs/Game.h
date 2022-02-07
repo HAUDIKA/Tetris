@@ -13,7 +13,7 @@ const int FIELD_WIDTH = 10;
 
 const int TILE_SIZE = 4;
 
-const int CELL_SIZE = 20;
+const int CELL_SIZE = 40;
 
 
 
@@ -31,12 +31,15 @@ public:
 
 
 	void render();
-	void drawTile();
+	void drawTile(Tile* tile);
+	void draw_ghost_tile();
 	void drawMatrix();
 	void pop_line();
 
+	void set_ghost_tile();
+
 	void create_new_tile();
-	bool collision();
+	bool collision(Tile* tile);
 	void place_tile();
 
 
@@ -60,6 +63,9 @@ private:
 	//Game logic
 	
 	std::unique_ptr<Tile> current_tile;
+	std::unique_ptr<Tile> ghost_tile;
+	std::unique_ptr<Tile> prev_tile;
+
 	std::vector<std::vector<int>> matrix;
 	double time_intervall = 0.9;
 	double measured_time = 0;

@@ -17,7 +17,7 @@ public:
     std::vector<std::vector<int>> getTileshape();
     sf::Vector2f getPosition();
     
-
+    void setTileshape(std::vector<std::vector<int>>);
     void setPosition(sf::Vector2f new_position);
 
     void move_down();
