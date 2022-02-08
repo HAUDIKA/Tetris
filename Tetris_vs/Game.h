@@ -5,6 +5,8 @@
 #include <random>
 #include <ctime>
 #include <sstream>
+#include <fstream>
+
 
 #include "Tile.h"
 
@@ -53,8 +55,10 @@ public:
 	bool isOpen();
 	void initVariables();
 	void initField();
-	bool isGameOver();
 	void init_score();
+
+	void read_high_score();
+	void write_high_score_file();
 
 	;
 
@@ -78,9 +82,14 @@ private:
 	std::vector<std::vector<int>> matrix;
 	double time_intervall = 0.9;
 	double measured_time = 0;
+	bool isReleased = true;
 	bool gameOver = false;
+
+	std::ifstream high_score_file;
+	std::ofstream write_high_score;
 
 	int score = 0;
 	int level = 1;
+	int high_score = 0;
 };
 

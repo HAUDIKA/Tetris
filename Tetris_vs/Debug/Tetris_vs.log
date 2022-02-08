@@ -1,34 +1,34 @@
 ﻿  Game.cpp
 C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(44,15): warning C4353: Nicht dem Standard entsprechende Erweiterung: Konstante 0 als Funktionsausdruck. Verwenden Sie stattdessen die systeminterne __noop-Funktion.
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(158,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(161,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(158,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(161,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(178,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(188,56): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(178,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(188,39): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(225,61): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(235,61): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(225,44): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(235,44): warning C4244: "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
           with
           [
               T=float
           ]
-C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(370,16): warning C4244: "return": Konvertierung von "double" in "int", möglicher Datenverlust
+C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Game.cpp(381,16): warning C4244: "return": Konvertierung von "double" in "int", möglicher Datenverlust
   Tetris_vs.vcxproj -> C:\Users\mika\OneDrive - rwth-aachen.de\Desktop\V2_Tetris\Tetris_vs\Debug\Tetris_vs.exe

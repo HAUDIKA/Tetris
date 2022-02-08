@@ -37,4 +37,7 @@
     <Font Include="PressStart2P-vaV7.ttf" />
     <Font Include="arial.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="high_score.txt" />
+  </ItemGroup>
 </Project>

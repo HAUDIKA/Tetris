@@ -48,19 +48,17 @@ void Game::update()
 
 		if (!this->gameOver)
 		{
-			switch (event.type)
+			switch (this->event.type)
 			{
-			case Event::KeyPressed:
-
+			case(sf::Event::KeyPressed):
 				if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Y)
 				{
 					this->current_tile->rotate(0);
-					
+
 					if (this->collision(current_tile.get())) this->current_tile->rotate(1);
 
 					this->set_ghost_tile();
 				}
-
 				else if (event.key.code == sf::Keyboard::X)
 				{
 					this->current_tile->rotate(1);
@@ -83,13 +81,18 @@ void Game::update()
 					this->set_ghost_tile();
 				}
 
-			
-				else if (event.key.code == sf::Keyboard::Down)
-				{
-					this->current_tile->setPosition(this->ghost_tile->getPosition());
-					this->place_tile();
+
+				else if (event.key.code == sf::Keyboard::Down && this->isReleased)
+				{			
+						this->isReleased = false;
+						this->current_tile->setPosition(this->ghost_tile->getPosition());
+						this->place_tile();
 				}
-			default: break;
+				break;
+
+			default:
+				this->isReleased = true;
+				break;
 			}
 		}
 	}
@@ -105,7 +108,7 @@ void Game::update()
 //renders the game for each simulationstep
 void Game::render()
 {
-	this->window->clear(Color::Black);
+	this->window->clear(sf::Color(100, 100, 200, 255));
 
 	this->drawMatrix();
 
@@ -160,6 +163,13 @@ void Game::drawTile(Tile* tile)
 			}
 		}
 	}
+
+	sf::RectangleShape square(sf::Vector2f(5 * CELL_SIZE, 5 * CELL_SIZE));
+	square.setOutlineColor(sf::Color::White);
+	square.setOutlineThickness(5.f);
+	square.setFillColor(sf::Color::Transparent);
+	square.setPosition(this->next_tile->getPosition() + sf::Vector2f(-CELL_SIZE/2.f, -CELL_SIZE/2.f));
+	this->window->draw(square);
 }
 
 void Game::draw_ghost_tile()
@@ -231,14 +241,14 @@ void Game::drawMatrix()
 void Game::drawScore()
 {
 	std::ostringstream ss;
-	ss << this->score;
+	ss << "Score: " << this->score << "\n\nHighscore: " << this->high_score;
 	this->text_score.setString(ss.str());
 	this->window->draw(this->text_score);
 }
 
 void Game::pop_line()
 {
-	bool complete = true;	
+	bool complete = true;
 	int row_count = 0;
 
 	int row = 0;
@@ -263,7 +273,7 @@ void Game::pop_line()
 		}
 		++row;
 	}
-	if(row_count>0)	this->score += this->update_score(row_count);
+	if (row_count > 0)	this->score += this->update_score(row_count);
 }
 
 void Game::set_ghost_tile()
@@ -300,7 +310,7 @@ void Game::create_next_tile()
 	std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 6);
 	this->next_tile = std::make_unique<Tile>(dist6(rng));
 
-	this->next_tile->setPosition(sf::Vector2f(550.f, 150.f));
+	this->next_tile->setPosition(sf::Vector2f(525.f, 250.f));
 }
 
 bool Game::collision(Tile* tile)
@@ -343,12 +353,13 @@ void Game::place_tile()
 
 	this->pop_line();
 
-	
+
 	this->create_new_tile();
 	this->create_next_tile();
-	
+
 	if (this->collision(current_tile.get()))
 	{
+		if(this->score > this->high_score) this->write_high_score_file();
 		this->gameOver = true;
 	}
 }
@@ -401,10 +412,6 @@ void Game::initField()
 
 }
 
-bool Game::isGameOver()
-{
-	return this->gameOver;
-}
 
 void Game::init_score()
 {
@@ -414,7 +421,21 @@ void Game::init_score()
 	this->text_score.setCharacterSize(20);
 	this->text_score.setStyle(sf::Text::Bold);
 	this->text_score.setFillColor(sf::Color::White);
-	this->text_score.setPosition(sf::Vector2f(500.f, 100.f));
+	this->text_score.setPosition(sf::Vector2f(450.f, 100.f));
+}
+
+void Game::read_high_score()
+{
+	this->high_score_file.open("high_score.txt", std::ios::in);
+	high_score_file >> this->high_score;
+	high_score_file.close();
+}
+
+void Game::write_high_score_file()
+{
+	this->write_high_score.open("high_score.txt", std::ios::out);
+	write_high_score << this->score;
+	this->write_high_score.close();
 }
 
 //Initialization of Member variables
@@ -429,4 +450,5 @@ void Game::initVariables()
 	this->window = std::make_unique<RenderWindow>(videomode, "Tetris", Style::Titlebar | Style::Close);
 	this->window->setFramerateLimit(60);
 	this->init_score();
+	this->read_high_score();
 }
