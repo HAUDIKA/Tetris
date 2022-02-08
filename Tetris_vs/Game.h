@@ -4,6 +4,8 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <sstream>
+
 #include "Tile.h"
 
 using namespace sf;
@@ -34,20 +36,25 @@ public:
 	void drawTile(Tile* tile);
 	void draw_ghost_tile();
 	void drawMatrix();
+	void drawScore();
+
 	void pop_line();
 
 	void set_ghost_tile();
 
 	void create_new_tile();
+	void create_next_tile();
 	bool collision(Tile* tile);
 	void place_tile();
 
+	int update_score(int row_count);
 
 	//Helper functions
 	bool isOpen();
 	void initVariables();
 	void initField();
 	bool isGameOver();
+	void init_score();
 
 	;
 
@@ -58,17 +65,22 @@ private:
 	VideoMode videomode;
 	Event event;
 
+	sf::Text text_score;
+	sf::Font myFont;
 	std::clock_t start;
 
 	//Game logic
 	
 	std::unique_ptr<Tile> current_tile;
 	std::unique_ptr<Tile> ghost_tile;
-	std::unique_ptr<Tile> prev_tile;
+	std::unique_ptr<Tile> next_tile;
 
 	std::vector<std::vector<int>> matrix;
 	double time_intervall = 0.9;
 	double measured_time = 0;
 	bool gameOver = false;
+
+	int score = 0;
+	int level = 1;
 };
 

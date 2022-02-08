@@ -111,6 +111,9 @@ void Game::render()
 
 	this->draw_ghost_tile();
 	this->drawTile(this->current_tile.get());
+	this->drawTile(this->next_tile.get());
+
+	this->drawScore();
 
 	this->window->display();
 }
@@ -225,11 +228,18 @@ void Game::drawMatrix()
 	}
 }
 
+void Game::drawScore()
+{
+	std::ostringstream ss;
+	ss << this->score;
+	this->text_score.setString(ss.str());
+	this->window->draw(this->text_score);
+}
+
 void Game::pop_line()
 {
-	bool complete;
-
-
+	bool complete = true;	
+	int row_count = 0;
 
 	int row = 0;
 	while (row < FIELD_HEIGHT)
@@ -249,9 +259,11 @@ void Game::pop_line()
 			this->matrix.erase(matrix.begin() + row);
 			this->matrix.insert(matrix.begin(), { 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 });
 			this->time_intervall *= 0.95;
+			row_count++;
 		}
 		++row;
 	}
+	if(row_count>0)	this->score += this->update_score(row_count);
 }
 
 void Game::set_ghost_tile()
@@ -274,14 +286,21 @@ void Game::set_ghost_tile()
 
 void Game::create_new_tile()
 {
-	std::random_device dev;
-	std::mt19937 rng(dev());
-	std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 6);
-	this->current_tile = std::make_unique<Tile>(dist6(rng));
+	this->current_tile = std::move(this->next_tile);
 
 	current_tile->setPosition(sf::Vector2f(FIELD_WIDTH / 2 * CELL_SIZE - CELL_SIZE, 0.f));
 
 	this->set_ghost_tile();
+}
+
+void Game::create_next_tile()
+{
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 6);
+	this->next_tile = std::make_unique<Tile>(dist6(rng));
+
+	this->next_tile->setPosition(sf::Vector2f(550.f, 150.f));
 }
 
 bool Game::collision(Tile* tile)
@@ -324,12 +343,31 @@ void Game::place_tile()
 
 	this->pop_line();
 
+	
 	this->create_new_tile();
-
+	this->create_next_tile();
+	
 	if (this->collision(current_tile.get()))
 	{
 		this->gameOver = true;
 	}
+}
+
+int Game::update_score(int row_count)
+{
+	double level_multiplier = 1;
+	int points = 0;
+
+	if (this->level == 1) level_multiplier = 2;
+	else if (this->level < 8) level_multiplier = 2 / 3;
+	else if (this->level > 8) level_multiplier = this->level + 1;
+
+	if (row_count < 2) points = 40;
+	else if (row_count < 3) points = 100;
+	else if (row_count < 4) points = 300;
+	else points = 1200;
+
+	return points * level_multiplier;
 }
 
 
@@ -368,13 +406,27 @@ bool Game::isGameOver()
 	return this->gameOver;
 }
 
+void Game::init_score()
+{
+	if (!this->myFont.loadFromFile("PressStart2P-vaV7.ttf"))
+		std::cout << "Could not load font." << std::endl;
+	this->text_score.setFont(this->myFont);
+	this->text_score.setCharacterSize(20);
+	this->text_score.setStyle(sf::Text::Bold);
+	this->text_score.setFillColor(sf::Color::White);
+	this->text_score.setPosition(sf::Vector2f(500.f, 100.f));
+}
+
 //Initialization of Member variables
 void Game::initVariables()
 {
 	this->initField();
+	this->create_next_tile();
 	this->create_new_tile();
-	this->videomode.height = 900;
-	this->videomode.width = 600;
+	this->create_next_tile();
+	this->videomode.height = 800;
+	this->videomode.width = 800;
 	this->window = std::make_unique<RenderWindow>(videomode, "Tetris", Style::Titlebar | Style::Close);
 	this->window->setFramerateLimit(60);
+	this->init_score();
 }
