@@ -5,19 +5,21 @@
 
 int main()
 {
+	
 
-	Game game;
+	auto game = new Game;
 
 	
 
-	while (game.isOpen())
+	while (game->isOpen())
 	{
 
-		game.update();
+		game->update();
 
-		game.render();
+		game->render();
 	}
 
+	delete game;
 
 	return 0;
 }

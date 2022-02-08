@@ -166,6 +166,9 @@
   <ItemGroup>
     <Text Include="high_score.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="hDC78ML.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <memory>
 #include <iostream>
 #include <random>
@@ -56,11 +57,12 @@ public:
 	void initVariables();
 	void initField();
 	void init_score();
+	void init_texture();
 
 	void read_high_score();
 	void write_high_score_file();
 
-	;
+	void restart_game();
 
 private:
 
@@ -70,10 +72,19 @@ private:
 	Event event;
 
 	sf::Text text_score;
+	sf::Text end_game_info;
+
 	sf::Font myFont;
+
+	sf::Texture texture;
+	sf::Sprite start_screen;
+
+
 	std::clock_t start;
 
 	//Game logic
+
+	bool is_start = false;
 	
 	std::unique_ptr<Tile> current_tile;
 	std::unique_ptr<Tile> ghost_tile;

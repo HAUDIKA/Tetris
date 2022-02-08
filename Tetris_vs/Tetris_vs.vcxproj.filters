@@ -40,4 +40,9 @@
   <ItemGroup>
     <Text Include="high_score.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="hDC78ML.png">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

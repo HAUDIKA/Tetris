@@ -19,7 +19,7 @@ Game::~Game()
 //Update the Simulation each simulationstep
 void Game::update()
 {
-	if (!this->gameOver)
+	if (!this->gameOver && is_start)
 	{
 		//Move down piece after time intervall
 		this->measured_time = (double)(std::clock() - this->start) / (double)CLOCKS_PER_SEC;
@@ -36,6 +36,11 @@ void Game::update()
 		}
 	}
 
+	if (this->gameOver)
+	{
+
+	}
+
 	//read user input
 	while (window->pollEvent(event))
 	{
@@ -44,9 +49,22 @@ void Game::update()
 		case Event::Closed():
 			window->close();
 			break;
+		case sf::Event::KeyPressed:
+			if (this->gameOver == false && event.key.code == sf::Keyboard::Space)
+			{
+				if (this->score > this->high_score) this->write_high_score_file();
+				this->is_start = true;	
+			}
+			if(this->is_start == true && event.key.code == sf::Keyboard::E)
+			{
+				//endGame
+				this->restart_game();
+			}
+			break;
+		default: break;
 		}
 
-		if (!this->gameOver)
+		if (!this->gameOver && is_start)
 		{
 			switch (this->event.type)
 			{
@@ -83,10 +101,10 @@ void Game::update()
 
 
 				else if (event.key.code == sf::Keyboard::Down && this->isReleased)
-				{			
-						this->isReleased = false;
-						this->current_tile->setPosition(this->ghost_tile->getPosition());
-						this->place_tile();
+				{
+					this->isReleased = false;
+					this->current_tile->setPosition(this->ghost_tile->getPosition());
+					this->place_tile();
 				}
 				break;
 
@@ -96,6 +114,7 @@ void Game::update()
 			}
 		}
 	}
+
 }
 
 
@@ -109,15 +128,23 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear(sf::Color(100, 100, 200, 255));
+	if (!this->is_start)
+	{
+		this->window->draw(this->start_screen);
+	}
+	else
+	{
+		
 
-	this->drawMatrix();
+		this->drawMatrix();
 
-	this->draw_ghost_tile();
-	this->drawTile(this->current_tile.get());
-	this->drawTile(this->next_tile.get());
+		this->draw_ghost_tile();
+		this->drawTile(this->current_tile.get());
+		this->drawTile(this->next_tile.get());
 
-	this->drawScore();
-
+		this->drawScore();
+		
+	}
 	this->window->display();
 }
 
@@ -168,7 +195,7 @@ void Game::drawTile(Tile* tile)
 	square.setOutlineColor(sf::Color::White);
 	square.setOutlineThickness(5.f);
 	square.setFillColor(sf::Color::Transparent);
-	square.setPosition(this->next_tile->getPosition() + sf::Vector2f(-CELL_SIZE/2.f, -CELL_SIZE/2.f));
+	square.setPosition(this->next_tile->getPosition() + sf::Vector2f(-CELL_SIZE / 2.f, -CELL_SIZE / 2.f));
 	this->window->draw(square);
 }
 
@@ -244,6 +271,8 @@ void Game::drawScore()
 	ss << "Score: " << this->score << "\n\nHighscore: " << this->high_score;
 	this->text_score.setString(ss.str());
 	this->window->draw(this->text_score);
+	
+	this->window->draw(end_game_info);
 }
 
 void Game::pop_line()
@@ -359,7 +388,7 @@ void Game::place_tile()
 
 	if (this->collision(current_tile.get()))
 	{
-		if(this->score > this->high_score) this->write_high_score_file();
+		if (this->score > this->high_score) this->write_high_score_file();
 		this->gameOver = true;
 	}
 }
@@ -409,7 +438,6 @@ void Game::initField()
 		matrix.push_back(temp_row);
 		temp_row.erase(temp_row.begin(), temp_row.end());
 	}
-
 }
 
 
@@ -422,6 +450,14 @@ void Game::init_score()
 	this->text_score.setStyle(sf::Text::Bold);
 	this->text_score.setFillColor(sf::Color::White);
 	this->text_score.setPosition(sf::Vector2f(450.f, 100.f));
+}
+
+void Game::init_texture()
+{
+	if (!this->texture.loadFromFile("hDC78ML.png")) {
+		std::cout << "Could not load texture" << std::endl;
+	}
+	this->start_screen.setTexture(this->texture);
 }
 
 void Game::read_high_score()
@@ -438,6 +474,13 @@ void Game::write_high_score_file()
 	this->write_high_score.close();
 }
 
+void Game::restart_game()
+{
+	this->gameOver = false;
+	this->matrix.clear();
+	this->initVariables();
+}
+
 //Initialization of Member variables
 void Game::initVariables()
 {
@@ -450,5 +493,14 @@ void Game::initVariables()
 	this->window = std::make_unique<RenderWindow>(videomode, "Tetris", Style::Titlebar | Style::Close);
 	this->window->setFramerateLimit(60);
 	this->init_score();
+	this->init_texture();
 	this->read_high_score();
+	this->score = 0;
+	this->is_start = false;
+
+	this->end_game_info.setFont(this->myFont);
+	this->end_game_info.setFillColor(sf::Color::White);
+	this->end_game_info.setPosition(sf::Vector2f(500.f, 600.f));
+	this->end_game_info.setString("  Hit E to\nrestart game");
+	this->end_game_info.setCharacterSize(20);
 }
