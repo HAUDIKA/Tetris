@@ -11,74 +11,53 @@ Tile::Tile(int initRandomNumber)
 		tileshape.push_back({ 0, 1 ,1 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 1;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 1;
 
 		break;
 
 	case 1:
-		tileshape.push_back({ 0, 0 ,2 ,0 });
-		tileshape.push_back({ 0, 0 ,2 ,0 });
-		tileshape.push_back({ 0, 0 ,2 ,0 });
-		tileshape.push_back({ 0, 0 ,2 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
+		tileshape.push_back({ 2, 2 ,2 ,2 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 4;
-		Furthests.furthest_left = 2;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 0;
+		
 
 		break;
 
 	case 2:
-		tileshape.push_back({ 0, 3 ,0 ,0 });
-		tileshape.push_back({ 0, 3 ,0 ,0 });
-		tileshape.push_back({ 0, 3 ,3 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
+		tileshape.push_back({ 3, 3 ,3 ,0 });
+		tileshape.push_back({ 3, 0 ,0 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 1;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 0;
 
 		break;
 
 	case 3:
-		tileshape.push_back({ 0, 0 ,4 ,0 });
-		tileshape.push_back({ 0, 0 ,4 ,0 });
-		tileshape.push_back({ 0, 4 ,4 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
+		tileshape.push_back({ 0, 4 ,4 ,4 });
+		tileshape.push_back({ 0, 0 ,0 ,4 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 1;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 0;
+		
 		break;
 
 	case 4:
-		tileshape.push_back({ 0, 5 ,0 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
 		tileshape.push_back({ 0, 5 ,5 ,0 });
-		tileshape.push_back({ 0, 0 ,5 ,0 });
+		tileshape.push_back({ 5, 5 ,0 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 1;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 0;
+		
 
 		break; 
 
 	case 5:
-		tileshape.push_back({ 0, 0 ,6 ,0 });
+		tileshape.push_back({ 0, 0 ,0 ,0 });
 		tileshape.push_back({ 0, 6 ,6 ,0 });
-		tileshape.push_back({ 0, 6 ,0 ,0 });
+		tileshape.push_back({ 0, 0 ,6 ,6 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 1;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 0;
 
 		break;
 
@@ -88,16 +67,12 @@ Tile::Tile(int initRandomNumber)
 		tileshape.push_back({ 0, 7 ,0 ,0 });
 		tileshape.push_back({ 0, 0 ,0 ,0 });
 
-		Furthests.furthest_down = 3;
-		Furthests.furthest_left = 0;
-		Furthests.furthest_right = 3;
-		Furthests.furthest_up = 1;
-
+		
 		break;
 
 	default: break;
 	}
-
+	this->set_furthest();
 	this->current_position = sf::Vector2f(0.f, 0.f);
 }
 

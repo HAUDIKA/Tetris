@@ -143,7 +143,7 @@ void Game::render()
 		this->drawTile(this->next_tile.get());
 
 		this->drawScore();
-		
+		this->drawLevel();
 	}
 	this->window->display();
 }
@@ -275,6 +275,14 @@ void Game::drawScore()
 	this->window->draw(end_game_info);
 }
 
+void Game::drawLevel()
+{
+	std::ostringstream ss;
+	ss << "Level: " << this->level << "\n\nLines destroyed: " << this->current_rows + this->complete_rows;
+	this->level_info.setString(ss.str());
+	this->window->draw(this->level_info);
+}
+
 void Game::pop_line()
 {
 	bool complete = true;
@@ -297,11 +305,21 @@ void Game::pop_line()
 		{
 			this->matrix.erase(matrix.begin() + row);
 			this->matrix.insert(matrix.begin(), { 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0 });
-			this->time_intervall *= 0.95;
+			
 			row_count++;
+			this->current_rows++;
 		}
 		++row;
 	}
+
+	if (this->current_rows >= 10)
+	{
+		this->level++;
+		this->time_intervall * 0.95;
+		this->complete_rows += this->current_rows;
+		this->current_rows = 0;
+	}
+
 	if (row_count > 0)	this->score += this->update_score(row_count);
 }
 
@@ -327,7 +345,9 @@ void Game::create_new_tile()
 {
 	this->current_tile = std::move(this->next_tile);
 
-	current_tile->setPosition(sf::Vector2f(FIELD_WIDTH / 2 * CELL_SIZE - CELL_SIZE, 0.f));
+	auto temp_furthest_up = this->current_tile->getFurthests().furthest_up;
+
+	current_tile->setPosition(sf::Vector2f(FIELD_WIDTH / 2 * CELL_SIZE - CELL_SIZE, 0.f - temp_furthest_up *CELL_SIZE));
 
 	this->set_ghost_tile();
 }
@@ -355,6 +375,7 @@ bool Game::collision(Tile* tile)
 	{
 		for (int col = 0; col < 4; col++)
 		{
+			if (temp_tile[row][col] != 0 && temp_position.y + row *CELL_SIZE < 0) return true;
 			if (temp_tile[row][col] != 0 && matrix[row + (int)(temp_position.y / CELL_SIZE)][col + (int)(temp_position.x / CELL_SIZE)] != 0)
 			{
 				return true;
@@ -443,13 +464,27 @@ void Game::initField()
 
 void Game::init_score()
 {
-	if (!this->myFont.loadFromFile("PressStart2P-vaV7.ttf"))
-		std::cout << "Could not load font." << std::endl;
+	
 	this->text_score.setFont(this->myFont);
 	this->text_score.setCharacterSize(20);
 	this->text_score.setStyle(sf::Text::Bold);
 	this->text_score.setFillColor(sf::Color::White);
 	this->text_score.setPosition(sf::Vector2f(450.f, 100.f));
+}
+
+void Game::init_level()
+{
+	this->level_info.setFont(this->myFont);
+	this->level_info.setCharacterSize(15);
+	this->level_info.setStyle(sf::Text::Bold);
+	this->level_info.setFillColor(sf::Color::White);
+	this->level_info.setPosition(sf::Vector2f(430.f, 550.f));
+}
+
+void Game::init_font()
+{
+	if (!this->myFont.loadFromFile("PressStart2P-vaV7.ttf"))
+		std::cout << "Could not load font." << std::endl;
 }
 
 void Game::init_texture()
@@ -459,6 +494,7 @@ void Game::init_texture()
 	}
 	this->start_screen.setTexture(this->texture);
 }
+
 
 void Game::read_high_score()
 {
@@ -492,7 +528,11 @@ void Game::initVariables()
 	this->videomode.width = 800;
 	this->window = std::make_unique<RenderWindow>(videomode, "Tetris", Style::Titlebar | Style::Close);
 	this->window->setFramerateLimit(60);
+
+	this->init_font();
+
 	this->init_score();
+	this->init_level();
 	this->init_texture();
 	this->read_high_score();
 	this->score = 0;
@@ -500,7 +540,10 @@ void Game::initVariables()
 
 	this->end_game_info.setFont(this->myFont);
 	this->end_game_info.setFillColor(sf::Color::White);
-	this->end_game_info.setPosition(sf::Vector2f(500.f, 600.f));
+	this->end_game_info.setPosition(sf::Vector2f(500.f, 700.f));
 	this->end_game_info.setString("  Hit E to\nrestart game");
 	this->end_game_info.setCharacterSize(20);
+
+	this->complete_rows = 0;
+	this->current_rows = 0;
 }

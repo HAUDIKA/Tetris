@@ -40,6 +40,7 @@ public:
 	void draw_ghost_tile();
 	void drawMatrix();
 	void drawScore();
+	void drawLevel();
 
 	void pop_line();
 
@@ -57,7 +58,11 @@ public:
 	void initVariables();
 	void initField();
 	void init_score();
+	void init_level();
+	void init_font();
+
 	void init_texture();
+
 
 	void read_high_score();
 	void write_high_score_file();
@@ -73,6 +78,7 @@ private:
 
 	sf::Text text_score;
 	sf::Text end_game_info;
+	sf::Text level_info;
 
 	sf::Font myFont;
 
@@ -102,5 +108,7 @@ private:
 	int score = 0;
 	int level = 1;
 	int high_score = 0;
+	int complete_rows = 0;
+	int current_rows = 0;
 };
 
