@@ -169,6 +169,9 @@
   <ItemGroup>
     <Image Include="hDC78ML.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Tetris.ogg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

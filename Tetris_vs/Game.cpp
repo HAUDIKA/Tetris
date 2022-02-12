@@ -5,6 +5,7 @@ Game::Game()
 {
 	this->initVariables();
 	this->start = std::clock();
+	this->init_music();
 }
 
 //Destructor
@@ -36,10 +37,7 @@ void Game::update()
 		}
 	}
 
-	if (this->gameOver)
-	{
-
-	}
+	
 
 	//read user input
 	while (window->pollEvent(event))
@@ -114,6 +112,8 @@ void Game::update()
 			}
 		}
 	}
+
+	this->update_music();
 
 }
 
@@ -420,7 +420,7 @@ int Game::update_score(int row_count)
 	int points = 0;
 
 	if (this->level == 1) level_multiplier = 2;
-	else if (this->level < 8) level_multiplier = 2 / 3;
+	else if (this->level < 8) level_multiplier = 3/2;
 	else if (this->level > 8) level_multiplier = this->level + 1;
 
 	if (row_count < 2) points = 40;
@@ -429,6 +429,15 @@ int Game::update_score(int row_count)
 	else points = 1200;
 
 	return points * level_multiplier;
+}
+
+void Game::update_music()
+{
+	if (this->music.getStatus()==sf::SoundSource::Stopped)
+	{
+		this->music.openFromFile("Tetris.ogg");
+		this->music.play();
+	}
 }
 
 
@@ -495,6 +504,12 @@ void Game::init_texture()
 	this->start_screen.setTexture(this->texture);
 }
 
+void Game::init_music()
+{
+	this->music.openFromFile("Tetris.ogg");
+	this->music.play();
+}
+
 
 void Game::read_high_score()
 {
@@ -543,6 +558,8 @@ void Game::initVariables()
 	this->end_game_info.setPosition(sf::Vector2f(500.f, 700.f));
 	this->end_game_info.setString("  Hit E to\nrestart game");
 	this->end_game_info.setCharacterSize(20);
+
+	
 
 	this->complete_rows = 0;
 	this->current_rows = 0;

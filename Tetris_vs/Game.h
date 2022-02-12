@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Audio.hpp>
 #include <memory>
 #include <iostream>
 #include <random>
@@ -53,6 +53,8 @@ public:
 
 	int update_score(int row_count);
 
+	void update_music();
+
 	//Helper functions
 	bool isOpen();
 	void initVariables();
@@ -63,6 +65,7 @@ public:
 
 	void init_texture();
 
+	void init_music();
 
 	void read_high_score();
 	void write_high_score_file();
@@ -85,6 +88,7 @@ private:
 	sf::Texture texture;
 	sf::Sprite start_screen;
 
+	sf::Music music;
 
 	std::clock_t start;
 
